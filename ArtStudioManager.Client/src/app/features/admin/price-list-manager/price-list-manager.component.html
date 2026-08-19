@@ -1,0 +1,77 @@
+<div class="max-w-7xl mx-auto px-4 py-6 sm:px-8 sm:py-8 font-sans">
+  <div class="mb-6">
+    <h1 class="heading-page">Price Lists</h1>
+    <p class="text-muted text-sm sm:text-base">Set pricing per category and size.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-panel lg:sticky lg:top-6">
+      <h2 class="heading-section mb-4">
+        {{ editingId ? 'Edit Price' : 'Add Price' }}
+      </h2>
+
+      <div class="mb-4">
+        <label class="label-field">Category</label>
+        <select formControlName="categoryId" class="input-field">
+          <option [ngValue]="null" disabled>Select a category</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="label-field">Size</label>
+        <select formControlName="size" class="input-field">
+          <option *ngFor="let opt of sizeOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="label-field">Price (₹)</label>
+        <input type="number" formControlName="price" class="input-field" placeholder="500" min="0" />
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" [disabled]="submitting" class="btn-primary w-full sm:w-auto">
+          {{ submitting ? 'Saving...' : (editingId ? 'Update' : 'Add Price') }}
+        </button>
+        <button *ngIf="editingId" type="button" (click)="resetForm()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <div>
+      <div *ngIf="loading" class="text-muted text-sm">Loading...</div>
+      <div *ngIf="error" class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">{{ error }}</div>
+
+      <div *ngIf="!loading && !error && groupedByCategory.length === 0" class="text-center py-16 border border-dashed border-border rounded-xl">
+        <p class="text-ink font-medium">No prices set yet</p>
+        <p class="text-muted text-sm mt-1">Add pricing using the form.</p>
+      </div>
+
+      <div *ngFor="let group of groupedByCategory" class="mb-6">
+        <h3 class="text-sm font-semibold text-ink mb-2">{{ group.category.name }}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div *ngFor="let item of group.prices" class="card flex items-center justify-between">
+            <div>
+              <p class="font-semibold text-ink">{{ getSizeLabel(item.size) }}</p>
+              <p class="text-accent-600 font-medium">₹{{ item.price }}</p>
+            </div>
+            <div class="flex gap-3">
+              <button (click)="startEdit(item)" class="text-sm text-accent-600 hover:text-accent-700 font-medium">Edit</button>
+              <button
+                (click)="deletePrice(item)"
+                [disabled]="deletingId === item.id"
+                class="btn-danger-text disabled:opacity-50"
+              >
+                {{ deletingId === item.id ? '...' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

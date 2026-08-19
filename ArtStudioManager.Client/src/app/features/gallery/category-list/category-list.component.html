@@ -1,0 +1,77 @@
+<div class="max-w-7xl mx-auto px-4 py-6 sm:px-8 sm:py-8 font-sans">
+  <div class="mb-6">
+    <h1 class="heading-page">Art Categories</h1>
+    <p class="text-muted text-sm sm:text-base">Organize your collections by category.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+
+    <!-- Form column -->
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-panel lg:sticky lg:top-6">
+      <h2 class="heading-section mb-4">
+        {{ editingId ? 'Edit Category' : 'Add New Category' }}
+      </h2>
+
+      <div class="mb-4">
+        <label class="label-field">Name</label>
+        <input type="text" formControlName="name" class="input-field" placeholder="e.g. Sketch" />
+        <p *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched" class="text-red-600 text-sm mt-1">
+          Name is required (min 2 characters).
+        </p>
+      </div>
+
+      <div class="mb-4">
+        <label class="label-field">Description</label>
+        <textarea formControlName="description" class="input-field" rows="3" placeholder="Optional description"></textarea>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" [disabled]="submitting" class="btn-primary w-full sm:w-auto">
+          {{ submitting ? 'Saving...' : (editingId ? 'Update' : 'Add Category') }}
+        </button>
+        <button *ngIf="editingId" type="button" (click)="cancelEdit()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <!-- List column -->
+    <div>
+      <!-- Loading state -->
+      <div *ngIf="loading" class="text-muted text-sm">Loading categories...</div>
+
+      <!-- Error state -->
+      <div *ngIf="error" class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
+        {{ error }}
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && !error && categories.length === 0" class="text-center py-16 border border-dashed border-border rounded-xl">
+        <p class="text-ink font-medium">No categories yet</p>
+        <p class="text-muted text-sm mt-1">Add your first category using the form.</p>
+      </div>
+
+      <!-- Data -->
+      <div *ngIf="!loading && !error && categories.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div *ngFor="let category of categories" class="card">
+          <h2 class="text-lg font-semibold text-ink">{{ category.name }}</h2>
+          <p class="text-muted mt-1 text-sm">{{ category.description }}</p>
+
+          <div class="flex gap-4 mt-4 pt-3 border-t border-border">
+            <button (click)="startEdit(category)" class="text-sm text-accent-600 hover:text-accent-700 font-medium">
+              Edit
+            </button>
+            <button
+              (click)="deleteCategory(category)"
+              [disabled]="deletingId === category.id"
+              class="btn-danger-text disabled:opacity-50"
+            >
+              {{ deletingId === category.id ? 'Deleting...' : 'Delete' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

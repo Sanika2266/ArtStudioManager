@@ -1,0 +1,19 @@
+<div class="min-h-screen bg-canvas">
+  <header class="bg-surface border-b border-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-accent-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <span class="font-semibold text-ink">ArtStudioManager</span>
+      </div>
+      <nav class="hidden sm:flex gap-6 text-sm font-medium text-muted">
+        <a routerLink="/artwork" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Artwork</a>
+        <a routerLink="/categories" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Categories</a>
+        <a routerLink="/pricing" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Price Lists</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
