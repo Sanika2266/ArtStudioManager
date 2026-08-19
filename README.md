@@ -121,12 +121,4 @@ ArtStudioManager/
 
 ---
 
-## 6. What's NOT included yet (your next building blocks)
-This starter gives you a working vertical slice (Categories + Artworks end-to-end). You'll extend it with:
-- CategoryCard, PriceCard, InquiryForm, admin ArtworkForm/ArtworkTable components
-- Angular routing (`app.routes.ts`) between Home / Gallery / Admin pages
-- Image upload handling (either to `wwwroot/uploads` on the API, or a cloud bucket)
-- Authentication for the admin dashboard (ASP.NET Identity or JWT)
-- The dashboard stats endpoint (`GET /api/dashboard/stats`)
 
-See `GIT_ROADMAP.md` for a day-by-day plan to build these and commit them one at a time.
