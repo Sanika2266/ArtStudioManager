@@ -1,7 +1,7 @@
 # ArtStudioManager
 
 A full-stack Artist Portfolio & Studio Management app.
-**Backend:** .NET 9 Web API + EF Core (Database-First) + SQL Server
+**Backend:** .NET 9 Web API + EF Core (Code-First) + SQL Server
 **Frontend:** Angular + Tailwind CSS + TypeScript (optionally wrapped with Ionic for mobile)
 
 This repo is set up as a **learning project** — every file has comments explaining *why*, not just *what*.
