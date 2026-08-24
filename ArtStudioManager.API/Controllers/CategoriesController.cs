@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ArtStudioManager.API.Models;
+﻿using ArtStudioManager.API.Models;
 using ArtStudioManager.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArtStudioManager.API.Controllers
 {
@@ -34,6 +35,7 @@ namespace ArtStudioManager.API.Controllers
 
         // POST: api/categories
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Category>> Create(Category category)
         {
             var created = await _categoryService.CreateAsync(category);
@@ -41,17 +43,17 @@ namespace ArtStudioManager.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        // PUT: api/categories/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, Category category)
         {
             var success = await _categoryService.UpdateAsync(id, category);
             if (!success) return NotFound();
-            return NoContent(); // 204 - success, nothing to return
+            return NoContent();
         }
 
-        // DELETE: api/categories/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _categoryService.DeleteAsync(id);

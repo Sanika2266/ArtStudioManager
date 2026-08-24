@@ -5,7 +5,8 @@ import { Category } from '../../../shared/models/category.model';
 import { ArtworkService } from '../../../core/services/artwork.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { UploadService } from '../../../core/services/upload.service';
-import { environment } from 'src/environments/environment.prod';
+import { ConfirmModalService } from '../../../core/services/confirm-modal.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-artwork-list',
@@ -23,20 +24,19 @@ export class ArtworkListComponent implements OnInit {
   editingId: number | null = null;
   deletingId: number | null = null;
 
-  // Image upload state
   selectedFile: File | null = null;
   imagePreviewUrl: string | null = null;
   uploading = false;
   uploadError: string | null = null;
 
-  // apiBaseUrl = 'https://localhost:44303'; 
   apiBaseUrl = environment.apiUrl;
 
   constructor(
     private artworkService: ArtworkService,
     private categoryService: CategoryService,
     private uploadService: UploadService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmModal: ConfirmModalService
   ) {
     this.artworkForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(2)]],
@@ -83,7 +83,6 @@ export class ArtworkListComponent implements OnInit {
 
     const file = input.files[0];
 
-    // Basic client-side validation (server also validates — never trust client-only)
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       this.uploadError = 'Only JPG, PNG, or WEBP images are allowed.';
@@ -97,14 +96,12 @@ export class ArtworkListComponent implements OnInit {
     this.uploadError = null;
     this.selectedFile = file;
 
-    // Show a local preview immediately, before uploading
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreviewUrl = reader.result as string;
     };
     reader.readAsDataURL(file);
 
-    // Upload right away, store the returned URL for when we submit the form
     this.uploading = true;
     this.uploadService.uploadImage(file).subscribe({
       next: (res) => {
@@ -128,6 +125,11 @@ export class ArtworkListComponent implements OnInit {
   onSubmit(): void {
     if (this.artworkForm.invalid) {
       this.artworkForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.uploading) {
+      this.uploadError = 'Please wait for the image to finish uploading.';
       return;
     }
 
@@ -186,20 +188,20 @@ export class ArtworkListComponent implements OnInit {
   }
 
   deleteArtwork(artwork: Artwork): void {
-    const confirmed = confirm(`Delete "${artwork.title}"? This cannot be undone.`);
-    if (!confirmed) return;
+    this.confirmModal.confirmDelete(artwork.title).subscribe(confirmed => {
+      if (!confirmed) return;
 
-    this.deletingId = artwork.id;
-    this.artworkService.delete(artwork.id).subscribe({
-      next: () => {
-        this.deletingId = null;
-        this.loadArtworks();
-      },
-      error: (err) => {
-        console.error('Failed to delete artwork', err);
-        this.deletingId = null;
-        alert('Could not delete this artwork.');
-      }
+      this.deletingId = artwork.id;
+      this.artworkService.delete(artwork.id).subscribe({
+        next: () => {
+          this.deletingId = null;
+          this.loadArtworks();
+        },
+        error: (err) => {
+          console.error('Failed to delete artwork', err);
+          this.deletingId = null;
+        }
+      });
     });
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../core/services/category.service';
+import { ConfirmModalService } from '../../../core/services/confirm-modal.service';
 
 @Component({
   selector: 'app-category-list',
@@ -16,16 +17,17 @@ export class CategoryListComponent implements OnInit {
   categoryForm: FormGroup;
   submitting = false;
 
-  editingId: number | null = null; // null = creating, set = editing that category
-  deletingId: number | null = null; // tracks which delete button is mid-request
+  editingId: number | null = null;
+  deletingId: number | null = null;
 
   constructor(
     private categoryService: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmModal: ConfirmModalService
   ) {
     this.categoryForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['']
+      description: ['', Validators.maxLength(200)]
     });
   }
 
@@ -57,7 +59,6 @@ export class CategoryListComponent implements OnInit {
     this.submitting = true;
 
     if (this.editingId) {
-      // UPDATE mode
       this.categoryService.update(this.editingId, this.categoryForm.value).subscribe({
         next: () => {
           this.cancelEdit();
@@ -70,7 +71,6 @@ export class CategoryListComponent implements OnInit {
         }
       });
     } else {
-      // CREATE mode
       this.categoryService.create(this.categoryForm.value).subscribe({
         next: () => {
           this.categoryForm.reset();
@@ -91,7 +91,6 @@ export class CategoryListComponent implements OnInit {
       name: category.name,
       description: category.description
     });
-    // Scroll to form so the user sees it's now in edit mode
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -101,20 +100,20 @@ export class CategoryListComponent implements OnInit {
   }
 
   deleteCategory(category: Category): void {
-    const confirmed = confirm(`Delete "${category.name}"? This cannot be undone.`);
-    if (!confirmed) return;
+    this.confirmModal.confirmDelete(category.name).subscribe(confirmed => {
+      if (!confirmed) return;
 
-    this.deletingId = category.id;
-    this.categoryService.delete(category.id).subscribe({
-      next: () => {
-        this.deletingId = null;
-        this.loadCategories();
-      },
-      error: (err) => {
-        console.error('Failed to delete category', err);
-        this.deletingId = null;
-        alert('Could not delete this category — it may still have artworks linked to it.');
-      }
+      this.deletingId = category.id;
+      this.categoryService.delete(category.id).subscribe({
+        next: () => {
+          this.deletingId = null;
+          this.loadCategories();
+        },
+        error: (err) => {
+          console.error('Failed to delete category', err);
+          this.deletingId = null;
+        }
+      });
     });
   }
 }

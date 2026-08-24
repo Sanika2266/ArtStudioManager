@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-canvas flex font-sans">
+
+  <!-- Left: branding panel (hidden on mobile) -->
+  <div class="hidden lg:flex lg:w-1/2 bg-ink items-center justify-center p-12 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 30%, white 1px, transparent 1px), radial-gradient(circle at 80% 70%, white 1px, transparent 1px); background-size: 60px 60px;"></div>
+    <div class="relative z-10 max-w-sm">
+      <div class="w-12 h-12 rounded-xl bg-accent-600 flex items-center justify-center text-white font-bold text-lg mb-6">A</div>
+      <h1 class="text-3xl font-bold text-white tracking-tight mb-3">ArtStudioManager</h1>
+      <p class="text-white/60">Manage your portfolio, pricing, and customer inquiries — all in one place.</p>
+    </div>
+  </div>
+
+  <!-- Right: login form -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-12">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-full max-w-sm">
+
+      <div class="lg:hidden flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 rounded-lg bg-accent-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+        <span class="font-semibold text-ink">ArtStudioManager</span>
+      </div>
+
+      <h2 class="text-2xl font-bold text-ink tracking-tight mb-1">Welcome back</h2>
+      <p class="text-muted text-sm mb-8">Sign in to manage your studio.</p>
+
+      <div class="mb-4">
+        <label class="label-field">Username</label>
+        <input type="text" formControlName="username" class="input-field" placeholder="Enter your username" autocomplete="username" />
+        <p *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="text-red-600 text-sm mt-1">
+          Username is required.
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <label class="label-field">Password</label>
+        <input type="password" formControlName="password" class="input-field" placeholder="Enter your password" autocomplete="current-password" />
+        <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-600 text-sm mt-1">
+          Password is required.
+        </p>
+      </div>
+
+      <p *ngIf="errorMessage" class="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
+        {{ errorMessage }}
+      </p>
+
+      <button type="submit" [disabled]="submitting" class="btn-primary w-full">
+        {{ submitting ? 'Signing in...' : 'Sign In' }}
+      </button>
+
+      <a routerLink="/" class="block text-center text-sm text-muted hover:text-ink transition mt-6">
+        ← Back to site
+      </a>
+    </form>
+  </div>
+
+</div>

@@ -30,7 +30,7 @@
         <div *ngIf="imagePreviewUrl" class="relative rounded-lg overflow-hidden border border-border">
           <img [src]="imagePreviewUrl" alt="Preview" class="w-full h-48 object-cover" />
           <div *ngIf="uploading" class="absolute inset-0 bg-white/70 flex items-center justify-center text-sm text-ink font-medium">
-            Uploading...
+            <span class="spinner mr-2"></span> Uploading...
           </div>
           <button
             type="button"
@@ -72,6 +72,9 @@
         <div>
           <label class="label-field">Price (₹)</label>
           <input type="number" formControlName="price" class="input-field" placeholder="500" min="0" />
+          <p *ngIf="artworkForm.get('price')?.invalid && artworkForm.get('price')?.touched" class="text-red-600 text-sm mt-1">
+            Enter a valid price.
+          </p>
         </div>
         <div>
           <label class="label-field">Medium</label>
@@ -101,13 +104,15 @@
 
     <!-- List column -->
     <div>
-      <div *ngIf="loading" class="text-muted text-sm">Loading artworks...</div>
+      <div *ngIf="loading" class="loading-block">
+        <span class="spinner"></span> Loading artwork...
+      </div>
 
       <div *ngIf="error" class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
         {{ error }}
       </div>
 
-      <div *ngIf="!loading && !error && artworks.length === 0" class="text-center py-16 border border-dashed border-border rounded-xl">
+      <div *ngIf="!loading && !error && artworks.length === 0" class="empty-state">
         <p class="text-ink font-medium">No artwork yet</p>
         <p class="text-muted text-sm mt-1">Add your first piece using the form.</p>
       </div>

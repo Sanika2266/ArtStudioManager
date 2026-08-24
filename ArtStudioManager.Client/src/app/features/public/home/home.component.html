@@ -1,0 +1,171 @@
+  <!-- Artwork Gallery -->
+  <section id="gallery" class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+    <div class="mb-10">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">A Little Gallery of My Art</h2>
+      <p class="text-muted">Every drawing has a story.</p>
+    </div>
+
+    <div *ngIf="loading" class="loading-block">
+      <span class="spinner"></span> Loading gallery...
+    </div>
+
+    <div *ngIf="!loading && artworks.length === 0" class="empty-state">
+      <p class="text-ink font-medium">Gallery coming soon</p>
+      <p class="text-muted text-sm mt-1">New pieces are added regularly.</p>
+    </div>
+    
+    <div *ngIf="!loading && artworks.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let artwork of artworks" class="group cursor-pointer" [routerLink]="['/artwork', artwork.id]">
+            <div class="aspect-[4/5] rounded-xl overflow-hidden bg-canvas border border-border relative">
+                <img *ngIf="artwork.imageUrl" [src]="apiBaseUrl + artwork.imageUrl" [alt]="artwork.title"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div *ngIf="!artwork.imageUrl" class="w-full h-full flex items-center justify-center text-muted text-sm">
+                    No image
+                </div>
+                <div
+                    class="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-300 flex items-center justify-center">
+                    <span
+                        class="opacity-0 group-hover:opacity-100 transition-opacity bg-surface text-ink text-sm font-medium px-4 py-2 rounded-lg shadow-card">
+                        View Artwork
+                    </span>
+                </div>
+            </div>
+            <div class="mt-3">
+                <h3 class="font-semibold text-ink">{{ artwork.title }}</h3>
+                <div class="flex items-center justify-between mt-1">
+                    <span class="text-sm text-muted">{{ artwork.category?.name }}</span>
+                    <span class="text-sm font-medium text-ink">From ₹{{ artwork.price }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="bg-canvas border-y border-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        <div class="mb-10">
+            <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">Explore by Category</h2>
+            <p class="text-muted">Find the style that speaks to you.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let category of categories" class="card">
+                <h3 class="text-lg font-semibold text-ink mb-1">{{ category.name }}</h3>
+                <p class="text-muted text-sm mb-4">{{ category.description }}</p>
+                <a href="#gallery" class="text-sm text-accent-600 hover:text-accent-700 font-medium">Explore Collection
+                    →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+    <div class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">Choose Your Size</h2>
+        <p class="text-muted">Pricing varies by category and canvas size.</p>
+    </div>
+
+    <div class="space-y-8">
+        <div *ngFor="let category of categories">
+            <div *ngIf="getPricesForCategory(category.id).length > 0">
+                <h3 class="text-lg font-semibold text-ink mb-3">{{ category.name }}</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+                    <div *ngFor="let price of getPricesForCategory(category.id)"
+                        class="card flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold text-ink">{{ getSizeLabel(price.size) }}</p>
+                            <p class="text-muted text-sm">{{ price.size === 0 ? 'Perfect for a personal piece' : 'For a
+                                detailed statement piece' }}</p>
+                        </div>
+                        <p class="text-xl font-bold text-accent-600">₹{{ price.price }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Custom Artwork CTA + Inquiry Form -->
+<section id="custom" class="bg-ink">
+    <div class="max-w-3xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">Have Something Special In Mind?
+            </h2>
+            <p class="text-white/70">Tell me what you'd like to turn into art, and I'll get back to you.</p>
+        </div>
+
+        <!-- Success state -->
+        <div *ngIf="inquirySubmitted" class="bg-white rounded-2xl p-8 text-center">
+            <p class="text-lg font-semibold text-ink mb-1">Thank you!</p>
+            <p class="text-muted text-sm">Your request has been received. I'll be in touch soon.</p>
+        </div>
+
+        <!-- Form -->
+        <form *ngIf="!inquirySubmitted" [formGroup]="inquiryForm" (ngSubmit)="onSubmitInquiry()"
+            class="bg-white rounded-2xl p-6 sm:p-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="label-field">Name</label>
+                    <input type="text" formControlName="name" class="input-field" placeholder="Your name" />
+                    <p *ngIf="inquiryForm.get('name')?.invalid && inquiryForm.get('name')?.touched"
+                        class="text-red-600 text-sm mt-1">Name is required.</p>
+                </div>
+                <div>
+                    <label class="label-field">Email</label>
+                    <input type="email" formControlName="email" class="input-field" placeholder="you@example.com" />
+                    <p *ngIf="inquiryForm.get('email')?.invalid && inquiryForm.get('email')?.touched"
+                        class="text-red-600 text-sm mt-1">A valid email is required.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="label-field">Phone (optional)</label>
+                    <input type="text" formControlName="phone" class="input-field" placeholder="Your phone number" />
+                </div>
+                <div>
+                    <label class="label-field">Preferred Size</label>
+                    <input type="text" formControlName="preferredSize" class="input-field"
+                        placeholder="A4, A3, or custom" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="label-field">Artwork Type</label>
+                <input type="text" formControlName="artworkType" class="input-field"
+                    placeholder="e.g. Portrait, pet sketch" />
+            </div>
+
+            <div class="mb-4">
+                <label class="label-field">Reference Image (optional)</label>
+                <div *ngIf="!referenceImagePreview"
+                    class="border-2 border-dashed border-border rounded-lg p-4 text-center relative">
+                    <input type="file" accept="image/*" (change)="onReferenceFileSelected($event)"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    <p class="text-sm text-muted">Click to upload a reference photo</p>
+                </div>
+                <div *ngIf="referenceImagePreview" class="relative rounded-lg overflow-hidden border border-border">
+                    <img [src]="referenceImagePreview" class="w-full h-40 object-cover" />
+                    <div *ngIf="uploadingReference"
+                        class="absolute inset-0 bg-white/70 flex items-center justify-center text-sm">Uploading...</div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <label class="label-field">Message</label>
+                <textarea formControlName="message" class="input-field" rows="4"
+                    placeholder="Describe what you'd like..."></textarea>
+                <p *ngIf="inquiryForm.get('message')?.invalid && inquiryForm.get('message')?.touched"
+                    class="text-red-600 text-sm mt-1">Please add a message.</p>
+            </div>
+
+            <p *ngIf="inquiryError" class="text-red-600 text-sm mb-4">{{ inquiryError }}</p>
+
+            <button type="submit" [disabled]="submittingInquiry || uploadingReference" class="btn-primary w-full">
+                {{ uploadingReference ? 'Uploading image...' : (submittingInquiry ? 'Sending...' : 'Send My Idea') }}
+            </button>
+        </form>
+    </div>
+</section>

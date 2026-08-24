@@ -17,6 +17,9 @@
           <option [ngValue]="null" disabled>Select a category</option>
           <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
         </select>
+        <p *ngIf="form.get('categoryId')?.invalid && form.get('categoryId')?.touched" class="text-red-600 text-sm mt-1">
+          Please select a category.
+        </p>
       </div>
 
       <div class="mb-4">
@@ -29,6 +32,9 @@
       <div class="mb-4">
         <label class="label-field">Price (₹)</label>
         <input type="number" formControlName="price" class="input-field" placeholder="500" min="0" />
+        <p *ngIf="form.get('price')?.invalid && form.get('price')?.touched" class="text-red-600 text-sm mt-1">
+          Enter a valid price.
+        </p>
       </div>
 
       <div class="flex gap-3">
@@ -42,10 +48,12 @@
     </form>
 
     <div>
-      <div *ngIf="loading" class="text-muted text-sm">Loading...</div>
+      <div *ngIf="loading" class="loading-block">
+        <span class="spinner"></span> Loading prices...
+      </div>
       <div *ngIf="error" class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">{{ error }}</div>
 
-      <div *ngIf="!loading && !error && groupedByCategory.length === 0" class="text-center py-16 border border-dashed border-border rounded-xl">
+      <div *ngIf="!loading && !error && groupedByCategory.length === 0" class="empty-state">
         <p class="text-ink font-medium">No prices set yet</p>
         <p class="text-muted text-sm mt-1">Add pricing using the form.</p>
       </div>

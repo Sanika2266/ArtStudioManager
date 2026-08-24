@@ -1,0 +1,10 @@
+<div
+  *ngIf="(toast$ | async) as toast"
+  class="fixed bottom-6 right-6 z-50 max-w-sm rounded-lg shadow-cardHover px-4 py-3 text-sm font-medium animate-fade-in"
+  [class.bg-red-600]="toast.type === 'error'"
+  [class.text-white]="toast.type === 'error'"
+  [class.bg-green-600]="toast.type === 'success'"
+  [class.text-white]="toast.type === 'success'"
+>
+  {{ toast.message }}
+</div>

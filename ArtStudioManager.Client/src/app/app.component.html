@@ -1,19 +1,26 @@
 <div class="min-h-screen bg-canvas">
-  <header class="bg-surface border-b border-border">
+  <header class="bg-surface border-b border-border sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
+      <a routerLink="/" class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-lg bg-accent-600 flex items-center justify-center text-white font-bold text-sm">A</div>
         <span class="font-semibold text-ink">ArtStudioManager</span>
-      </div>
-      <nav class="hidden sm:flex gap-6 text-sm font-medium text-muted">
-        <a routerLink="/artwork" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Artwork</a>
-        <a routerLink="/categories" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Categories</a>
-        <a routerLink="/pricing" routerLinkActive="text-ink" class="hover:text-ink transition cursor-pointer">Price Lists</a>
+      </a>
+
+      <nav class="hidden sm:flex items-center gap-6 text-sm font-medium text-muted">
+        <a href="#gallery" class="hover:text-ink transition">Gallery</a>
+        <a href="#custom" class="hover:text-ink transition">Custom Artwork</a>
+        <a routerLink="/admin/artwork" class="text-accent-600 hover:text-accent-700 transition">
+          Admin →
+        </a>
       </nav>
+      
     </div>
   </header>
+  
+    <main>
+  <router-outlet></router-outlet>
+</main>
 
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+ <app-toast></app-toast>
+<app-confirm-modal></app-confirm-modal>
 </div>

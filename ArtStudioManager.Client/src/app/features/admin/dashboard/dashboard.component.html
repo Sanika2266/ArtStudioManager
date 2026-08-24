@@ -1,0 +1,45 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="heading-page">Welcome back</h1>
+    <p class="text-muted text-sm sm:text-base">Here's what's happening in your studio.</p>
+  </div>
+
+  <div *ngIf="loading" class="text-muted text-sm">Loading stats...</div>
+
+  <div *ngIf="!loading" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+    <div class="card">
+      <p class="text-muted text-sm mb-1">Total Artwork</p>
+      <p class="text-3xl font-bold text-ink">{{ totalArtwork }}</p>
+    </div>
+    <div class="card">
+      <p class="text-muted text-sm mb-1">Available</p>
+      <p class="text-3xl font-bold text-ink">{{ availableArtwork }}</p>
+    </div>
+    <div class="card">
+      <p class="text-muted text-sm mb-1">Categories</p>
+      <p class="text-3xl font-bold text-ink">{{ totalCategories }}</p>
+    </div>
+    <div class="card relative">
+      <p class="text-muted text-sm mb-1">Inquiries</p>
+      <p class="text-3xl font-bold text-ink">{{ totalInquiries }}</p>
+      <span *ngIf="newInquiries > 0" class="absolute top-4 right-4 text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+        {{ newInquiries }} new
+      </span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <a routerLink="/admin/artwork" class="card hover:shadow-cardHover transition cursor-pointer">
+      <p class="font-semibold text-ink mb-1">Manage Artwork</p>
+      <p class="text-muted text-sm">Add, edit, or remove pieces from your portfolio.</p>
+    </a>
+    <a routerLink="/admin/pricing" class="card hover:shadow-cardHover transition cursor-pointer">
+      <p class="font-semibold text-ink mb-1">Update Pricing</p>
+      <p class="text-muted text-sm">Adjust prices by category and size.</p>
+    </a>
+    <a routerLink="/admin/inquiries" class="card hover:shadow-cardHover transition cursor-pointer">
+      <p class="font-semibold text-ink mb-1">Review Inquiries</p>
+      <p class="text-muted text-sm">Respond to customer requests.</p>
+    </a>
+  </div>
+</div>

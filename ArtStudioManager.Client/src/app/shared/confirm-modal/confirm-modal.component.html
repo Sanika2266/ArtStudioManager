@@ -1,0 +1,21 @@
+<div
+  *ngIf="modalService.state$ | async as state"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4"
+>
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-ink/40" (click)="modalService.cancel()"></div>
+
+  <!-- Modal -->
+  <div class="relative bg-white rounded-2xl shadow-cardHover p-6 max-w-sm w-full">
+    <h3 class="text-lg font-semibold text-ink mb-2">{{ state.title }}</h3>
+    <p class="text-muted text-sm mb-6">{{ state.message }}</p>
+    <div class="flex gap-3 justify-end">
+      <button (click)="modalService.cancel()" class="btn-secondary">
+        Cancel
+      </button>
+      <button (click)="modalService.confirm()" class="bg-red-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition">
+        {{ state.confirmLabel || 'Delete' }}
+      </button>
+    </div>
+  </div>
+</div>

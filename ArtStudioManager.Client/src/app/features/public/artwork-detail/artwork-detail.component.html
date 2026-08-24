@@ -1,0 +1,66 @@
+<div class="max-w-5xl mx-auto px-4 py-8 sm:px-8 font-sans">
+
+  <button (click)="goBack()" class="text-sm text-muted hover:text-ink transition mb-6 flex items-center gap-1">
+    ← Back to Gallery
+  </button>
+
+  <div *ngIf="loading" class="text-muted text-sm">Loading...</div>
+
+  <div *ngIf="notFound" class="text-center py-16 border border-dashed border-border rounded-xl">
+    <p class="text-ink font-medium">Artwork not found</p>
+    <p class="text-muted text-sm mt-1">It may have been removed or the link is incorrect.</p>
+  </div>
+
+  <div *ngIf="artwork && !loading" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- Image -->
+    <div class="rounded-xl overflow-hidden border border-border bg-canvas aspect-[4/5]">
+      <img
+        *ngIf="artwork.imageUrl"
+        [src]="apiBaseUrl + artwork.imageUrl"
+        [alt]="artwork.title"
+        class="w-full h-full object-cover"
+      />
+      <div *ngIf="!artwork.imageUrl" class="w-full h-full flex items-center justify-center text-muted text-sm">
+        No image available
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div>
+      <p class="text-sm text-accent-600 font-medium mb-2">{{ artwork.category?.name }}</p>
+      <h1 class="text-3xl font-bold text-ink tracking-tight mb-3">{{ artwork.title }}</h1>
+
+      <span
+        class="inline-block text-xs font-medium px-2.5 py-1 rounded-full mb-4"
+        [class.bg-green-100]="artwork.isAvailable"
+        [class.text-green-700]="artwork.isAvailable"
+        [class.bg-gray-100]="!artwork.isAvailable"
+        [class.text-gray-600]="!artwork.isAvailable"
+      >
+        {{ artwork.isAvailable ? 'Available' : 'Sold' }}
+      </span>
+
+      <p class="text-2xl font-bold text-ink mb-6">₹{{ artwork.price }}</p>
+
+      <p *ngIf="artwork.description" class="text-muted mb-6 leading-relaxed">{{ artwork.description }}</p>
+
+      <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+        <div *ngIf="artwork.medium">
+          <p class="text-muted mb-0.5">Medium</p>
+          <p class="text-ink font-medium">{{ artwork.medium }}</p>
+        </div>
+        <div *ngIf="artwork.dimensions">
+          <p class="text-muted mb-0.5">Dimensions</p>
+          <p class="text-ink font-medium">{{ artwork.dimensions }}</p>
+        </div>
+      </div>
+
+      <a routerLink="/" fragment="custom" class="btn-primary inline-block text-center">
+        Inquire About This Piece
+      </a>
+    </div>
+
+  </div>
+
+</div>

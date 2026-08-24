@@ -1,0 +1,16 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-8 py-4">
+  <nav class="flex items-center justify-between border-b border-border mb-2 overflow-x-auto">
+    <div class="flex gap-1">
+      <a routerLink="/admin/dashboard" routerLinkActive="border-accent-600 text-ink" class="px-4 py-3 text-sm font-medium text-muted border-b-2 border-transparent hover:text-ink transition whitespace-nowrap">Dashboard</a>
+      <a routerLink="/admin/artwork" routerLinkActive="border-accent-600 text-ink" class="px-4 py-3 text-sm font-medium text-muted border-b-2 border-transparent hover:text-ink transition whitespace-nowrap">Artwork</a>
+      <a routerLink="/admin/categories" routerLinkActive="border-accent-600 text-ink" class="px-4 py-3 text-sm font-medium text-muted border-b-2 border-transparent hover:text-ink transition whitespace-nowrap">Categories</a>
+      <a routerLink="/admin/pricing" routerLinkActive="border-accent-600 text-ink" class="px-4 py-3 text-sm font-medium text-muted border-b-2 border-transparent hover:text-ink transition whitespace-nowrap">Price Lists</a>
+      <a routerLink="/admin/inquiries" routerLinkActive="border-accent-600 text-ink" class="px-4 py-3 text-sm font-medium text-muted border-b-2 border-transparent hover:text-ink transition whitespace-nowrap">Inquiries</a>
+    </div>
+    <button (click)="logout()" class="text-sm text-muted hover:text-red-600 transition px-4 py-3 whitespace-nowrap">
+      Log Out
+    </button>
+  </nav>
+</div>
+
+<router-outlet></router-outlet>

@@ -15,6 +15,7 @@ namespace ArtStudioManager.API.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<PriceList> PriceLists { get; set; }
         public DbSet<Artwork> Artworks { get; set; }
+        public DbSet<Inquiry> Inquiries { get; set; }
 
         // Optional: fine-tune the model here (e.g., decimal precision, unique constraints)
         protected override void OnModelCreating(ModelBuilder modelBuilder)

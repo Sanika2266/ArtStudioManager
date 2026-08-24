@@ -1,0 +1,81 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="heading-page">Inquiries</h1>
+    <p class="text-muted text-sm sm:text-base">Requests from potential customers.</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-block">
+    <span class="spinner"></span> Loading inquiries...
+  </div>
+  <div *ngIf="error" class="text-red-700 bg-red-50 border border-red-200 rounded-lg p-4 text-sm">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && inquiries.length === 0" class="empty-state">
+    <p class="text-ink font-medium">No inquiries yet</p>
+    <p class="text-muted text-sm mt-1">Submissions from your public inquiry form will appear here.</p>
+  </div>
+
+  <div *ngIf="!loading && !error" class="space-y-4">
+    <div *ngFor="let inquiry of inquiries" class="card">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-semibold text-ink">{{ inquiry.name }}</h3>
+            <span
+              class="text-xs font-medium px-2 py-0.5 rounded-full"
+              [class.bg-amber-100]="inquiry.status === InquiryStatus.New"
+              [class.text-amber-700]="inquiry.status === InquiryStatus.New"
+              [class.bg-blue-100]="inquiry.status === InquiryStatus.InProgress"
+              [class.text-blue-700]="inquiry.status === InquiryStatus.InProgress"
+              [class.bg-green-100]="inquiry.status === InquiryStatus.Completed"
+              [class.text-green-700]="inquiry.status === InquiryStatus.Completed"
+            >
+              {{ getStatusLabel(inquiry.status) }}
+            </span>
+          </div>
+
+          <p class="text-sm text-muted mb-2">
+            {{ inquiry.email }} <span *ngIf="inquiry.phone">· {{ inquiry.phone }}</span>
+          </p>
+
+          <div class="text-sm text-ink space-y-1 mb-3">
+            <p *ngIf="inquiry.artworkType"><span class="text-muted">Type:</span> {{ inquiry.artworkType }}</p>
+            <p *ngIf="inquiry.preferredSize"><span class="text-muted">Size:</span> {{ inquiry.preferredSize }}</p>
+          </div>
+
+          <p class="text-sm text-ink bg-canvas rounded-lg p-3">{{ inquiry.message }}</p>
+
+          <img
+            *ngIf="inquiry.referenceImageUrl"
+            [src]="apiBaseUrl + inquiry.referenceImageUrl"
+            alt="Reference"
+            class="w-24 h-24 object-cover rounded-lg mt-3 border border-border"
+          />
+
+          <p class="text-xs text-muted mt-3">{{ inquiry.createdAt | date:'medium' }}</p>
+        </div>
+
+        <div class="flex sm:flex-col gap-2 shrink-0">
+          <select
+            [ngModel]="inquiry.status"
+            (ngModelChange)="changeStatus(inquiry, $event)"
+            [disabled]="updatingId === inquiry.id"
+            class="input-field text-sm"
+          >
+            <option [ngValue]="InquiryStatus.New">New</option>
+            <option [ngValue]="InquiryStatus.InProgress">In Progress</option>
+            <option [ngValue]="InquiryStatus.Completed">Completed</option>
+          </select>
+          <button
+            (click)="deleteInquiry(inquiry)"
+            [disabled]="deletingId === inquiry.id"
+            class="btn-danger-text text-left sm:text-center"
+          >
+            {{ deletingId === inquiry.id ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
