@@ -26,8 +26,18 @@ export class HomeComponent implements OnInit {
   inquiryError: string | null = null;
   referenceImagePreview: string | null = null;
   uploadingReference = false;
+  selectedCategoryId: number | null = null;
 
   apiBaseUrl = environment.apiUrl;
+  get filteredArtworks(): Artwork[] {
+    if (this.selectedCategoryId === null) return this.artworks;
+    return this.artworks.filter(a => a.categoryId === this.selectedCategoryId);
+  }
+
+  get selectedCategoryName(): string | null {
+    if (this.selectedCategoryId === null) return null;
+    return this.categories.find(c => c.id === this.selectedCategoryId)?.name ?? null;
+  }
 
   constructor(
     private artworkService: ArtworkService,
@@ -101,32 +111,48 @@ export class HomeComponent implements OnInit {
     });
   }
 
-onSubmitInquiry(): void {
-  if (this.inquiryForm.invalid) {
-    this.inquiryForm.markAllAsTouched();
-    return;
-  }
-
-  if (this.uploadingReference) {
-    this.inquiryError = 'Please wait for the image to finish uploading.';
-    return;
-  }
-
-  this.submittingInquiry = true;
-  this.inquiryError = null;
-
-  this.inquiryService.create(this.inquiryForm.value).subscribe({
-    next: () => {
-      this.inquirySubmitted = true;
-      this.submittingInquiry = false;
-      this.inquiryForm.reset();
-      this.referenceImagePreview = null;
-    },
-    error: (err) => {
-      console.error('Failed to submit inquiry', err);
-      this.inquiryError = 'Something went wrong. Please try again.';
-      this.submittingInquiry = false;
+  onSubmitInquiry(): void {
+    if (this.inquiryForm.invalid) {
+      this.inquiryForm.markAllAsTouched();
+      return;
     }
-  });
-}
+
+    if (this.uploadingReference) {
+      this.inquiryError = 'Please wait for the image to finish uploading.';
+      return;
+    }
+
+    this.submittingInquiry = true;
+    this.inquiryError = null;
+
+    this.inquiryService.create(this.inquiryForm.value).subscribe({
+      next: () => {
+        this.inquirySubmitted = true;
+        this.submittingInquiry = false;
+        this.inquiryForm.reset();
+        this.referenceImagePreview = null;
+      },
+      error: (err) => {
+        console.error('Failed to submit inquiry', err);
+        this.inquiryError = 'Something went wrong. Please try again.';
+        this.submittingInquiry = false;
+      }
+    });
+  }
+
+  hasArtworksInCategory(categoryId: number): boolean {
+    return this.artworks.some(a => a.categoryId === categoryId);
+  }
+
+  exploreCategory(category: Category): void {
+    if (!this.hasArtworksInCategory(category.id)) {
+      return; // no artworks yet — don't navigate anywhere
+    }
+    this.selectedCategoryId = category.id;
+    document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  clearCategoryFilter(): void {
+    this.selectedCategoryId = null;
+  }
 }

@@ -59,6 +59,14 @@ body {
 .empty-state {
   @apply text-center py-16 border border-dashed border-border rounded-xl;
 }
+
+.btn-nav {
+  @apply bg-accent-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-700 transition inline-block;
+}
+
+.btn-back {
+  @apply inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink font-medium transition;
+}
 }
 /* Override Ionic's fixed-position app shell so our existing pages scroll normally */
 html, body {
@@ -76,4 +84,9 @@ ion-app {
 
 ion-router-outlet {
   position: static !important;
+}
+#categories,
+#pricing,
+#custom {
+  scroll-margin-top: 104px;
 }

@@ -1,25 +1,32 @@
-  <!-- Artwork Gallery -->
-  <section id="gallery" class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+<section id="gallery" class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
     <div class="mb-10">
-      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">A Little Gallery of My Art</h2>
-      <p class="text-muted">Every drawing has a story.</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">
+            {{ selectedCategoryName ? selectedCategoryName : 'A Little Gallery of My Art' }}
+        </h2>
+        <p class="text-muted">Every drawing has a story.</p>
+        <button *ngIf="selectedCategoryId !== null" (click)="clearCategoryFilter()"
+            class="text-sm text-accent-600 hover:text-accent-700 font-medium mt-2">
+            ← View all artwork
+        </button>
     </div>
 
     <div *ngIf="loading" class="loading-block">
-      <span class="spinner"></span> Loading gallery...
+        <span class="spinner"></span> Loading gallery...
     </div>
 
-    <div *ngIf="!loading && artworks.length === 0" class="empty-state">
-      <p class="text-ink font-medium">Gallery coming soon</p>
-      <p class="text-muted text-sm mt-1">New pieces are added regularly.</p>
+    <div *ngIf="!loading && filteredArtworks.length === 0" class="empty-state">
+        <p class="text-ink font-medium">Gallery coming soon</p>
+        <p class="text-muted text-sm mt-1">New pieces are added regularly.</p>
     </div>
-    
-    <div *ngIf="!loading && artworks.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let artwork of artworks" class="group cursor-pointer" [routerLink]="['/artwork', artwork.id]">
+
+    <div *ngIf="!loading && filteredArtworks.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let artwork of filteredArtworks" class="group cursor-pointer"
+            [routerLink]="['/artwork', artwork.id]">
             <div class="aspect-[4/5] rounded-xl overflow-hidden bg-canvas border border-border relative">
                 <img *ngIf="artwork.imageUrl" [src]="apiBaseUrl + artwork.imageUrl" [alt]="artwork.title"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                <div *ngIf="!artwork.imageUrl" class="w-full h-full flex items-center justify-center text-muted text-sm">
+                <div *ngIf="!artwork.imageUrl"
+                    class="w-full h-full flex items-center justify-center text-muted text-sm">
                     No image
                 </div>
                 <div
@@ -42,7 +49,7 @@
 </section>
 
 <!-- Categories -->
-<section class="bg-canvas border-y border-border">
+<section id="categories" class="bg-canvas border-y border-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
         <div class="mb-10">
             <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">Explore by Category</h2>
@@ -53,15 +60,20 @@
             <div *ngFor="let category of categories" class="card">
                 <h3 class="text-lg font-semibold text-ink mb-1">{{ category.name }}</h3>
                 <p class="text-muted text-sm mb-4">{{ category.description }}</p>
-                <a href="#gallery" class="text-sm text-accent-600 hover:text-accent-700 font-medium">Explore Collection
-                    →</a>
+                <button (click)="exploreCategory(category)" [disabled]="!hasArtworksInCategory(category.id)"
+                    class="text-sm font-medium" [class.text-accent-600]="hasArtworksInCategory(category.id)"
+                    [class.hover:text-accent-700]="hasArtworksInCategory(category.id)"
+                    [class.text-gray-300]="!hasArtworksInCategory(category.id)"
+                    [class.cursor-not-allowed]="!hasArtworksInCategory(category.id)">
+                    {{ hasArtworksInCategory(category.id) ? 'Explore Collection →' : 'No artwork yet' }}
+                </button>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Pricing -->
-<section class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+<section id="pricing" class="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
     <div class="mb-10">
         <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">Choose Your Size</h2>
         <p class="text-muted">Pricing varies by category and canvas size.</p>

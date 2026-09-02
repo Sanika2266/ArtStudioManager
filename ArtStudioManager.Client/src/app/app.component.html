@@ -1,26 +1,24 @@
 <div class="min-h-screen bg-canvas">
-  <header class="bg-surface border-b border-border sticky top-0 z-10">
+  <header class="bg-surface border-b border-border fixed top-0 left-0 right-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
       <a routerLink="/" class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-lg bg-accent-600 flex items-center justify-center text-white font-bold text-sm">A</div>
         <span class="font-semibold text-ink">ArtStudioManager</span>
       </a>
-
-      <nav class="hidden sm:flex items-center gap-6 text-sm font-medium text-muted">
-        <a href="#gallery" class="hover:text-ink transition">Gallery</a>
-        <a href="#custom" class="hover:text-ink transition">Custom Artwork</a>
-        <a routerLink="/admin/artwork" class="text-accent-600 hover:text-accent-700 transition">
-          Admin →
-        </a>
-      </nav>
-      
     </div>
-  </header>
-  
-    <main>
-  <router-outlet></router-outlet>
-</main>
 
- <app-toast></app-toast>
-<app-confirm-modal></app-confirm-modal>
+    <nav class="flex gap-1 px-4 sm:px-8 overflow-x-auto border-t border-border bg-surface">
+      <a href="#categories" (click)="setActive('categories')" class="px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition" [class.border-accent-600]="activeSection === 'categories'" [class.text-ink]="activeSection === 'categories'" [class.text-muted]="activeSection !== 'categories'" [class.border-transparent]="activeSection !== 'categories'">Explore by Category</a>
+      <a href="#pricing" (click)="setActive('pricing')" class="px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition" [class.border-accent-600]="activeSection === 'pricing'" [class.text-ink]="activeSection === 'pricing'" [class.text-muted]="activeSection !== 'pricing'" [class.border-transparent]="activeSection !== 'pricing'">Pricing</a>
+      <a href="#custom" (click)="setActive('custom')" class="px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition" [class.border-accent-600]="activeSection === 'custom'" [class.text-ink]="activeSection === 'custom'" [class.text-muted]="activeSection !== 'custom'" [class.border-transparent]="activeSection !== 'custom'">Custom Inquiry</a>
+      <a routerLink="/login" (click)="setActive('login')" class="px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap transition" [class.border-accent-600]="activeSection === 'login'" [class.text-ink]="activeSection === 'login'" [class.text-muted]="activeSection !== 'login'" [class.border-transparent]="activeSection !== 'login'">Login</a>
+    </nav>
+  </header>
+
+  <main class="pt-[104px]">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-toast></app-toast>
+  <app-confirm-modal></app-confirm-modal>
 </div>

@@ -2,3 +2,10 @@ bin/
 obj/ 
 *.user 
 .vs/ 
+ 
+# Capacitor Android 
+ArtStudioManager.Client/android/app/build/ 
+ArtStudioManager.Client/android/.gradle/ 
+ArtStudioManager.Client/android/local.properties 
+ArtStudioManager.Client/android/*.iml 
+ArtStudioManager.Client/android/.idea/ 

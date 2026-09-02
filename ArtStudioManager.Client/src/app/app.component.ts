@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ArtStudioManager.Client';
+  activeSection: string = 'categories';
+
+  setActive(section: string): void {
+    this.activeSection = section;
+  }
 }
