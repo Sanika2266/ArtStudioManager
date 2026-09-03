@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Register our DbContext, telling it to use SQL Server with our connection string
 builder.Services.AddDbContext<ArtStudioManagerDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IArtworkService, ArtworkService>();
